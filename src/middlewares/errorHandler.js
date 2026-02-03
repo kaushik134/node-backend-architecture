@@ -2,12 +2,12 @@ const responseCode = require('../utils/responseCode');
 const resMessage = require('../utils/resMessage');
 
 const errorHandler = (err, req, res, next) => {
-    console.error(err.stack); // Log error stack for debugging
+    console.error(err.stack);
 
     let error = { ...err };
     error.message = err.message;
 
-    // Mongoose bad ObjectId
+
     if (err.name === 'CastError') {
         const message = `Resource not found with id of ${err.value}`;
         return res.status(responseCode.notFound).json({
@@ -17,7 +17,7 @@ const errorHandler = (err, req, res, next) => {
         });
     }
 
-    // Mongoose duplicate key
+
     if (err.code === 11000) {
         const message = 'Duplicate field value entered';
         return res.status(responseCode.conflict).json({
@@ -27,7 +27,7 @@ const errorHandler = (err, req, res, next) => {
         });
     }
 
-    // Mongoose validation error
+
     if (err.name === 'ValidationError') {
         const message = Object.values(err.errors).map((val) => val.message).join(', ');
         return res.status(responseCode.badRequest).json({
@@ -37,7 +37,7 @@ const errorHandler = (err, req, res, next) => {
         });
     }
 
-    // Joi Validation Error (if not handled in controller/middleware)
+
     if (err.isJoi) {
         const message = err.details.map((detail) => detail.message).join(', ');
         return res.status(responseCode.badRequest).json({
@@ -47,7 +47,7 @@ const errorHandler = (err, req, res, next) => {
         });
     }
 
-    // JWT errors
+
     if (err.name === 'JsonWebTokenError') {
         return res.status(responseCode.invalidToken).json({
             status: responseCode.invalidToken,
@@ -64,7 +64,7 @@ const errorHandler = (err, req, res, next) => {
         });
     }
 
-    // Default to 500 Server Error
+
     res.status(err.statusCode || responseCode.internalServerError).json({
         status: err.statusCode || responseCode.internalServerError,
         message: error.message || resMessage.internalServerError,

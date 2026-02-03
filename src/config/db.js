@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     const options = {
-        autoIndex: true, // Don't build indexes in production for performance, usually set to false but kept true for dev simplified
-        maxPoolSize: 10, // Maintain up to 10 socket connections
-        serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
-        socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-        family: 4, // Use IPv4, skip trying IPv6
+        autoIndex: true, 
+        maxPoolSize: 10, 
+        serverSelectionTimeoutMS: 5000, 
+        socketTimeoutMS: 45000, 
+        family: 4, 
     };
 
     const connect = async () => {
@@ -15,7 +15,7 @@ const connectDB = async () => {
             console.log(`MongoDB Connected: ${mongoose.connection.host}`);
         } catch (error) {
             console.error('MongoDB connection error:', error);
-            // Retry connection after 5 seconds
+            
             setTimeout(connect, 5000);
         }
     };

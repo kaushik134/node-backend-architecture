@@ -25,15 +25,11 @@ app.use(responseHandler);
 app.use('/api/auth', authRoutes);
 
 app.get('/api', (req, res) => {
-    res.success({}, 'Welcome to the Node.js Production API');
+    res.success({ message: 'Welcome to the Node.js Production API' });
 });
 
 app.use((req, res, next) => {
-    res.status(responseCode.notFound).json({
-        status: responseCode.notFound,
-        message: resMessage.notFound,
-        data: {},
-    });
+    res.notFound({ message: 'API route not found' });
 });
 
 app.use(errorHandler);

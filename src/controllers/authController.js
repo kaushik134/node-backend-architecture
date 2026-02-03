@@ -1,26 +1,38 @@
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
+const validateWithJoi = require('../utils/joiValidate');
+const { register: registerSchema, login: loginSchema } = require('../validations/auth.validation');
 
-// Generate access token
-const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
+
+const generateTokens = (id) => {
+    const accessToken = jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRE,
     });
+
+    const refreshToken = jwt.sign({ id }, process.env.JWT_REFRESH_SECRET, {
+        expiresIn: process.env.JWT_REFRESH_EXPIRE,
+    });
+
+    return { accessToken, refreshToken };
 };
 
-/**
- * @desc    Register user
- * @route   POST /api/auth/register
- * @access  Public
- */
+
 exports.register = async (req, res, next) => {
     try {
-        const { firstName, email, password } = req.body;
+        const { isValid, value, errors } = validateWithJoi(req.body, registerSchema.body);
+
+        if (!isValid) {
+            return res.badRequest({
+                message: errors.length > 1 ? errors : "Validation error occurred.",
+            });
+        }
+
+        const { firstName, email, password } = value;
 
         const userExists = await User.findOne({ email });
 
         if (userExists) {
-            return res.conflict({}, 'Email already exists');
+            return res.conflict({ message: 'Email already exists' });
         }
 
         const user = await User.create({
@@ -29,64 +41,72 @@ exports.register = async (req, res, next) => {
             password,
         });
 
-        const token = generateToken(user._id);
+        const { accessToken, refreshToken } = generateTokens(user._id);
 
         res.createResource({
-            _id: user._id,
-            firstName: user.firstName,
-            email: user.email,
-            token,
-        }, 'User registered successfully');
+            data: {
+                _id: user._id,
+                firstName: user.firstName,
+                email: user.email,
+                accessToken,
+                refreshToken,
+            },
+            message: 'User registered successfully'
+        });
     } catch (error) {
         next(error);
     }
 };
 
-/**
- * @desc    Login user
- * @route   POST /api/auth/login
- * @access  Public
- */
+
 exports.login = async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+        const { isValid, value, errors } = validateWithJoi(req.body, loginSchema.body);
 
-        // Check for user
+        if (!isValid) {
+            return res.badRequest({
+                message: errors.length > 1 ? errors : "Validation error occurred.",
+            });
+        }
+
+        const { email, password } = value;
+
+
         const user = await User.findOne({ email }).select('+password');
 
         if (!user) {
-            return res.unauthorized({}, 'Invalid credentials');
+            return res.unauthorized({ message: 'Invalid credentials' });
         }
 
-        // Check if password matches
+
         const isMatch = await user.comparePassword(password);
 
         if (!isMatch) {
-            return res.unauthorized({}, 'Invalid credentials');
+            return res.unauthorized({ message: 'Invalid credentials' });
         }
 
-        const token = generateToken(user._id);
+        const { accessToken, refreshToken } = generateTokens(user._id);
 
         res.success({
-            _id: user._id,
-            firstName: user.firstName,
-            email: user.email,
-            token,
-        }, 'Login successful');
+            data: {
+                _id: user._id,
+                firstName: user.firstName,
+                email: user.email,
+                accessToken,
+                refreshToken,
+            },
+            message: 'Login successful'
+        });
     } catch (error) {
         next(error);
     }
 };
 
-/**
- * @desc    Get current logged in user
- * @route   GET /api/auth/me
- * @access  Private
- */
+
 exports.getMe = async (req, res, next) => {
     try {
         const user = await User.findById(req.user.id);
-        res.success(user);
+        res.success({ data: user });
     } catch (error) {
         next(error);
     }

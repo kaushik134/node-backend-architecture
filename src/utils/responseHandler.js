@@ -2,7 +2,7 @@ const responseCode = require('./responseCode');
 const resMessage = require('./resMessage');
 
 const responseHandler = (req, res, next) => {
-    res.success = (data = {}, message = resMessage.success) => {
+    res.success = ({ data = {}, message = resMessage.success } = {}) => {
         return res.status(responseCode.success).json({
             status: responseCode.success,
             message,
@@ -10,7 +10,7 @@ const responseHandler = (req, res, next) => {
         });
     };
 
-    res.createResource = (data = {}, message = resMessage.created) => {
+    res.createResource = ({ data = {}, message = resMessage.created } = {}) => {
         return res.status(responseCode.created).json({
             status: responseCode.created,
             message,
@@ -18,7 +18,7 @@ const responseHandler = (req, res, next) => {
         });
     };
 
-    res.badRequest = (data = {}, message = resMessage.badRequest) => {
+    res.badRequest = ({ data = {}, message = resMessage.badRequest } = {}) => {
         return res.status(responseCode.badRequest).json({
             status: responseCode.badRequest,
             message,
@@ -26,7 +26,7 @@ const responseHandler = (req, res, next) => {
         });
     };
 
-    res.unauthorized = (data = {}, message = resMessage.unauthorized) => {
+    res.unauthorized = ({ data = {}, message = resMessage.unauthorized } = {}) => {
         return res.status(responseCode.unauthorized).json({
             status: responseCode.unauthorized,
             message,
@@ -34,7 +34,7 @@ const responseHandler = (req, res, next) => {
         });
     };
 
-    res.forbidden = (data = {}, message = resMessage.forbidden) => {
+    res.forbidden = ({ data = {}, message = resMessage.forbidden } = {}) => {
         return res.status(responseCode.forbidden).json({
             status: responseCode.forbidden,
             message,
@@ -42,7 +42,7 @@ const responseHandler = (req, res, next) => {
         });
     };
 
-    res.notFound = (data = {}, message = resMessage.notFound) => {
+    res.notFound = ({ data = {}, message = resMessage.notFound } = {}) => {
         return res.status(responseCode.notFound).json({
             status: responseCode.notFound,
             message,
@@ -50,7 +50,7 @@ const responseHandler = (req, res, next) => {
         });
     };
 
-    res.conflict = (data = {}, message = resMessage.conflict) => {
+    res.conflict = ({ data = {}, message = resMessage.conflict } = {}) => {
         return res.status(responseCode.conflict).json({
             status: responseCode.conflict,
             message,
@@ -58,7 +58,7 @@ const responseHandler = (req, res, next) => {
         });
     };
 
-    res.tooManyRequests = (data = {}, message = resMessage.tooManyRequests) => {
+    res.tooManyRequests = ({ data = {}, message = resMessage.tooManyRequests } = {}) => {
         return res.status(responseCode.tooManyRequests).json({
             status: responseCode.tooManyRequests,
             message,
@@ -66,7 +66,7 @@ const responseHandler = (req, res, next) => {
         });
     };
 
-    res.tokenExpired = (data = {}, message = resMessage.tokenExpired) => {
+    res.tokenExpired = ({ data = {}, message = resMessage.tokenExpired } = {}) => {
         return res.status(responseCode.unauthorized).json({
             status: responseCode.unauthorized,
             message,
@@ -74,7 +74,7 @@ const responseHandler = (req, res, next) => {
         });
     };
 
-    res.internalServerError = (data = {}, message = resMessage.internalServerError) => {
+    res.internalServerError = ({ data = {}, message = resMessage.internalServerError } = {}) => {
         return res.status(responseCode.internalServerError).json({
             status: responseCode.internalServerError,
             message,
