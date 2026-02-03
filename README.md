@@ -17,7 +17,7 @@ A powerful CLI to bootstrap production-ready Node.js backend architectures with 
 Get started in seconds:
 
 ```bash
-npx create-my-node-app my-app
+npx create-node-craft my-app
 cd my-app
 npm run dev
 ```

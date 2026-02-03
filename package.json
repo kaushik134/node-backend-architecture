@@ -1,10 +1,10 @@
 {
-    "name": "create-my-node-app",
+    "name": "create-node-craft",
     "version": "1.0.0",
     "description": "CLI to generate a production-ready Node.js backend",
     "main": "index.js",
     "bin": {
-        "create-my-node-app": "./bin/cli.js"
+        "create-node-craft": "./bin/cli.js"
     },
     "scripts": {
         "start": "node index.js",
