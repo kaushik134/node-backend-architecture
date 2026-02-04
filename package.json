@@ -6,28 +6,23 @@
     "bin": {
         "create-node-craft": "./bin/cli.js"
     },
+    "files": [
+        "bin",
+        "template"
+    ],
     "scripts": {
-        "start": "node index.js",
-        "dev": "nodemon index.js",
-        "lint": "eslint .",
-        "setup": "node scripts/setup.js"
-    },
-    "dependencies": {
-        "bcrypt": "^6.0.0",
-        "cors": "^2.8.6",
-        "dotenv": "^17.2.3",
-        "express": "^5.2.1",
-        "joi": "^18.0.2",
-        "jsonwebtoken": "^9.0.3",
-        "mongoose": "^9.1.5"
-    },
-    "devDependencies": {
-        "eslint": "^9.39.2",
-        "nodemon": "^3.1.11"
+        "start": "node index.js"
     },
     "engines": {
         "node": ">=18.0.0"
     },
+    "keywords": [
+        "node",
+        "cli",
+        "backend",
+        "boilerplate",
+        "generator"
+    ],
     "author": "",
     "license": "ISC"
 }
